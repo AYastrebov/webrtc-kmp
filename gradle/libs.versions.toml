@@ -29,7 +29,8 @@ jvmToolchain = "17"
 webrtc-adapter = "9.0.6"
 
 # Plugins
-agp = "9.4.1"
+# AGP 9.4.x reports @Ignore'd device tests as failures
+agp = "9.3.3"
 ktlint = "14.2.0"
 compose-plugin = "1.12.2"
 vanniktech-maven-publish = "0.37.0"
