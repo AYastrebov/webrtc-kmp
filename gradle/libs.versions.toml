@@ -12,6 +12,7 @@ accompanist-permision = "0.37.3"
 kermit = "2.2.0"
 kotlin-wrappers = "2026.10.4"
 webrtc-android-sdk = "137.7151.05"
+# Later WebRTC-SDK Swift package tags don't resolve: https://github.com/webrtc-sdk/Specs/issues/31
 webrtc-ios-sdk = "137.7151.00"
 
 #Android

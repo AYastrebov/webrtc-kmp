@@ -1,42 +1,15 @@
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
-import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidKotlinMultiplatformLibrary)
     alias(libs.plugins.jetbrains.compose)
     alias(libs.plugins.compose.compiler)
-    kotlin("native.cocoapods")
 }
 
 kotlin {
-    cocoapods {
-        version = "1.0"
-        summary = "Compose app"
-        homepage = "not published"
-        ios.deploymentTarget = "13.0"
-
-        pod("WebRTC-SDK") {
-            version = libs.versions.webrtc.ios.sdk.get()
-            moduleName = "WebRTC"
-            packageName = "WebRTC"
-            linkOnly = true
-        }
-
-        podfile = project.file("../iosApp/Podfile")
-
-        framework {
-            baseName = "ComposeApp"
-            isStatic = true
-            export(project(":webrtc-kmp"))
-        }
-
-        xcodeConfigurationToNativeBuildType["CUSTOM_DEBUG"] = NativeBuildType.DEBUG
-        xcodeConfigurationToNativeBuildType["CUSTOM_RELEASE"] = NativeBuildType.RELEASE
-    }
-
     android {
         namespace = "com.shepeliev.webrtckmp.sample.shared"
         compileSdk = libs.versions.compileSdk.get().toInt()
@@ -47,8 +20,13 @@ kotlin {
         }
     }
 
-    iosArm64()
-    iosSimulatorArm64()
+    listOf(iosArm64(), iosSimulatorArm64()).forEach { iosTarget ->
+        iosTarget.binaries.framework {
+            baseName = "ComposeApp"
+            isStatic = true
+            export(project(":webrtc-kmp"))
+        }
+    }
 
     js {
         browser {

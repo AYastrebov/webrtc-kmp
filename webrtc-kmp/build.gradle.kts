@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalKotlinGradlePluginApi::class)
+
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
@@ -8,7 +10,6 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidKotlinMultiplatformLibrary)
     alias(libs.plugins.vanniktech.maven.publish)
-    kotlin("native.cocoapods")
 }
 
 group = "com.shepeliev"
@@ -20,23 +21,15 @@ kotlin {
 
     compilerOptions {
         freeCompilerArgs.add("-Xexpect-actual-classes")
+        optIn.add("kotlinx.cinterop.ExperimentalForeignApi")
     }
 
-    cocoapods {
-        version = project.version.toString()
-        summary = "WebRTC Kotlin Multiplatform SDK"
-        homepage = "https://github.com/shepeliev/webrtc-kmp"
-        ios.deploymentTarget = "13.0"
-
-        noPodspec()
-
-        pod("WebRTC-SDK") {
-            version =
-                libs.versions.webrtc.ios.sdk
-                    .get()
-            moduleName = "WebRTC"
-            packageName = "WebRTC"
-        }
+    swiftPMDependencies {
+        swiftPackage(
+            url = url("https://github.com/webrtc-sdk/Specs.git"),
+            version = exact(libs.versions.webrtc.ios.sdk.get()),
+            products = listOf(product("WebRTC")),
+        )
     }
 
     android {
@@ -84,7 +77,6 @@ kotlin {
         }
     }
 
-    @OptIn(ExperimentalKotlinGradlePluginApi::class)
     applyDefaultHierarchyTemplate {
         common {
             group("jsAndWasmJs") {
