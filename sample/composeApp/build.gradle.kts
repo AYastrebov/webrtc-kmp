@@ -10,6 +10,8 @@ plugins {
 }
 
 kotlin {
+    jvmToolchain(libs.versions.jvmToolchain.get().toInt())
+
     android {
         namespace = "com.shepeliev.webrtckmp.sample.shared"
         compileSdk = libs.versions.compileSdk.get().toInt()
@@ -24,7 +26,8 @@ kotlin {
         iosTarget.binaries.framework {
             baseName = "ComposeApp"
             isStatic = true
-            export(project(":webrtc-kmp"))
+            binaryOption("bundleId", "com.shepeliev.webrtckmp.sample.ComposeApp")
+            export(dependencies.project(":webrtc-kmp"))
         }
     }
 

@@ -14,14 +14,14 @@ plugins {
 
 group = "com.shepeliev"
 
-version = System.getenv("VERSION") ?: "0.0.0"
+version = providers.environmentVariable("VERSION").getOrElse("0.0.0")
 
 kotlin {
     explicitApi()
+    jvmToolchain(libs.versions.jvmToolchain.get().toInt())
 
     compilerOptions {
         freeCompilerArgs.add("-Xexpect-actual-classes")
-        optIn.add("kotlinx.cinterop.ExperimentalForeignApi")
     }
 
     swiftPMDependencies {
@@ -98,7 +98,7 @@ kotlin {
         }
 
         jsMain.dependencies {
-            implementation(npm("webrtc-adapter", "9.0.6"))
+            implementation(npm("webrtc-adapter", libs.versions.webrtc.adapter.get()))
         }
 
         wasmJsMain.dependencies {
@@ -107,7 +107,6 @@ kotlin {
 
         commonTest.dependencies {
             implementation(kotlin("test"))
-            implementation(kotlin("test-annotations-common"))
             implementation(libs.kotlin.coroutines.test)
         }
 
@@ -115,6 +114,10 @@ kotlin {
             implementation(libs.androidx.test.core)
             implementation(libs.androidx.test.runner)
             implementation(libs.androidx.test.rules)
+        }
+
+        named { it.startsWith("ios") }.configureEach {
+            languageSettings.optIn("kotlinx.cinterop.ExperimentalForeignApi")
         }
     }
 }

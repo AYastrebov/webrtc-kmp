@@ -22,6 +22,12 @@ sampleMinSdk = "23"
 compileSdk = "37"
 targetSdk = "37"
 
+#JVM
+jvmToolchain = "17"
+
+#npm
+webrtc-adapter = "9.0.6"
+
 # Plugins
 agp = "9.4.1"
 ktlint = "14.2.0"

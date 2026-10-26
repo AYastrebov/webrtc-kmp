@@ -4,6 +4,10 @@ plugins {
     alias(libs.plugins.compose.compiler)
 }
 
+kotlin {
+    jvmToolchain(libs.versions.jvmToolchain.get().toInt())
+}
+
 android {
     namespace = "com.shepeliev.webrtckmp.sample"
     compileSdk = libs.versions.compileSdk.get().toInt()
