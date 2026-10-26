@@ -54,7 +54,6 @@ kotlin {
         }
     }
 
-    iosX64()
     iosArm64()
     iosSimulatorArm64()
 
@@ -117,13 +116,6 @@ kotlin {
             implementation(libs.androidx.test.runner)
             implementation(libs.androidx.test.rules)
         }
-
-        val iosX64AndSimulatorArm64Main =
-            create("iosX64AndSimulatorArm64Main") {
-                dependsOn(iosMain.get())
-            }
-        iosX64Main.get().dependsOn(iosX64AndSimulatorArm64Main)
-        iosSimulatorArm64Main.get().dependsOn(iosX64AndSimulatorArm64Main)
     }
 }
 
