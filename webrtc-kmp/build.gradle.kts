@@ -66,11 +66,8 @@ kotlin {
             commonWebpackConfig {
                 devServer =
                     (devServer ?: KotlinWebpackConfig.DevServer()).apply {
-                        static =
-                            (static ?: mutableListOf()).apply {
-                                // Serve sources to debug inside browser
-                                add(project.rootDir.path)
-                            }
+                        // Serve sources to debug inside browser
+                        static(project.rootDir.path)
                     }
             }
         }
@@ -116,14 +113,12 @@ kotlin {
             implementation(libs.androidx.test.rules)
         }
 
-        val iosX64AndSimulatorArm64Main by creating {
-            dependsOn(iosMain.get())
-        }
-
-        val iosX64Main by getting
-        iosX64Main.dependsOn(iosX64AndSimulatorArm64Main)
-        val iosSimulatorArm64Main by getting
-        iosSimulatorArm64Main.dependsOn(iosX64AndSimulatorArm64Main)
+        val iosX64AndSimulatorArm64Main =
+            create("iosX64AndSimulatorArm64Main") {
+                dependsOn(iosMain.get())
+            }
+        iosX64Main.get().dependsOn(iosX64AndSimulatorArm64Main)
+        iosSimulatorArm64Main.get().dependsOn(iosX64AndSimulatorArm64Main)
     }
 }
 
