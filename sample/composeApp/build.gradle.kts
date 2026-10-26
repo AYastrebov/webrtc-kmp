@@ -1,4 +1,3 @@
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
@@ -6,7 +5,7 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.androidApplication)
+    alias(libs.plugins.androidKotlinMultiplatformLibrary)
     alias(libs.plugins.jetbrains.compose)
     alias(libs.plugins.compose.compiler)
     kotlin("native.cocoapods")
@@ -38,8 +37,11 @@ kotlin {
         xcodeConfigurationToNativeBuildType["CUSTOM_RELEASE"] = NativeBuildType.RELEASE
     }
 
-    @OptIn(ExperimentalKotlinGradlePluginApi::class)
-    androidTarget {
+    android {
+        namespace = "com.shepeliev.webrtckmp.sample.shared"
+        compileSdk = libs.versions.compileSdk.get().toInt()
+        minSdk = libs.versions.minSdk.get().toInt()
+        androidResources { enable = true }
         compilerOptions {
             jvmTarget = JvmTarget.JVM_1_8
         }
@@ -85,8 +87,6 @@ kotlin {
 
         androidMain.dependencies {
             implementation(libs.kotlin.coroutines.android)
-            implementation(compose.preview)
-            implementation(libs.androidx.activity.compose)
             implementation(libs.accompanist.permissions)
         }
 
@@ -97,39 +97,5 @@ kotlin {
             implementation(libs.kotlin.wrappers.reactDom)
             implementation(libs.kotlin.wrappers.emotion)
         }
-    }
-}
-
-android {
-    namespace = "com.shepeliev.webrtckmp.sample"
-    compileSdk = libs.versions.compileSdk.get().toInt()
-
-    sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
-    sourceSets["main"].res.srcDirs("src/androidMain/res")
-    sourceSets["main"].resources.srcDirs("src/commonMain/resources")
-
-    defaultConfig {
-        applicationId = "com.shepeliev.webrtckmp.sample"
-        minSdk = libs.versions.minSdk.get().toInt()
-        targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 1
-        versionName = "1.0"
-    }
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
-    }
-    buildTypes {
-        getByName("release") {
-            isMinifyEnabled = false
-        }
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-    dependencies {
-        debugImplementation(compose.uiTooling)
     }
 }

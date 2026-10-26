@@ -6,7 +6,7 @@ import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.androidKotlinMultiplatformLibrary)
     alias(libs.plugins.vanniktech.maven.publish)
     kotlin("native.cocoapods")
 }
@@ -39,12 +39,23 @@ kotlin {
         }
     }
 
-    @OptIn(ExperimentalKotlinGradlePluginApi::class)
-    androidTarget {
-        publishAllLibraryVariants()
-        instrumentedTestVariant {
-            sourceSetTree.set(KotlinSourceSetTree.test)
+    android {
+        namespace = "com.shepeliev.webrtckmp"
+        compileSdk =
+            libs.versions.compileSdk
+                .get()
+                .toInt()
+        minSdk =
+            libs.versions.minSdk
+                .get()
+                .toInt()
+
+        withDeviceTestBuilder {
+            sourceSetTreeName = KotlinSourceSetTree.test.name
+        }.configure {
+            instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         }
+
         compilerOptions {
             jvmTarget = JvmTarget.JVM_1_8
         }
@@ -109,7 +120,9 @@ kotlin {
             implementation(libs.kotlin.coroutines.test)
         }
 
-        androidInstrumentedTest.dependencies {
+        getByName("androidDeviceTest").dependencies {
+            implementation(libs.androidx.test.core)
+            implementation(libs.androidx.test.runner)
             implementation(libs.androidx.test.rules)
         }
 
@@ -119,42 +132,6 @@ kotlin {
             }
         iosX64Main.get().dependsOn(iosX64AndSimulatorArm64Main)
         iosSimulatorArm64Main.get().dependsOn(iosX64AndSimulatorArm64Main)
-    }
-}
-
-android {
-    namespace = "com.shepeliev.webrtckmp"
-
-    compileSdk =
-        libs.versions.compileSdk
-            .get()
-            .toInt()
-    sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
-    sourceSets["main"].res.srcDir("src/androidMain/res")
-
-    defaultConfig {
-        minSdk =
-            libs.versions.minSdk
-                .get()
-                .toInt()
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-
-    testOptions {
-        targetSdk =
-            libs.versions.targetSdk
-                .get()
-                .toInt()
-    }
-
-    dependencies {
-        androidTestImplementation(libs.androidx.test.core)
-        androidTestImplementation(libs.androidx.test.runner)
     }
 }
 

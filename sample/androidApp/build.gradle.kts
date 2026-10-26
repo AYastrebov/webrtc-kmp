@@ -1,0 +1,40 @@
+plugins {
+    alias(libs.plugins.androidApplication)
+    alias(libs.plugins.jetbrains.compose)
+    alias(libs.plugins.compose.compiler)
+}
+
+android {
+    namespace = "com.shepeliev.webrtckmp.sample"
+    compileSdk = libs.versions.compileSdk.get().toInt()
+
+    defaultConfig {
+        applicationId = "com.shepeliev.webrtckmp.sample"
+        minSdk = libs.versions.minSdk.get().toInt()
+        targetSdk = libs.versions.targetSdk.get().toInt()
+        versionCode = 1
+        versionName = "1.0"
+    }
+    packaging {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
+    }
+    buildTypes {
+        getByName("release") {
+            isMinifyEnabled = false
+        }
+    }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    implementation(project(":sample:composeApp"))
+    implementation(libs.androidx.activity.compose)
+    implementation(compose.runtime)
+    implementation(compose.preview)
+    debugImplementation(compose.uiTooling)
+}
