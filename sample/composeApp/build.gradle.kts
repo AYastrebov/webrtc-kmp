@@ -40,14 +40,13 @@ kotlin {
     android {
         namespace = "com.shepeliev.webrtckmp.sample.shared"
         compileSdk = libs.versions.compileSdk.get().toInt()
-        minSdk = libs.versions.minSdk.get().toInt()
+        minSdk = libs.versions.sampleMinSdk.get().toInt()
         androidResources { enable = true }
         compilerOptions {
-            jvmTarget = JvmTarget.JVM_1_8
+            jvmTarget = JvmTarget.JVM_11
         }
     }
 
-    iosX64()
     iosArm64()
     iosSimulatorArm64()
 
@@ -74,12 +73,12 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(compose.runtime)
-            implementation(compose.foundation)
-            implementation(compose.material)
-            implementation(compose.ui)
-            implementation(compose.components.resources)
-            implementation(compose.components.uiToolingPreview)
+            implementation(libs.compose.runtime)
+            implementation(libs.compose.foundation)
+            implementation(libs.compose.material)
+            implementation(libs.compose.ui)
+            implementation(libs.compose.components.resources)
+            implementation(libs.compose.ui.tooling.preview)
             implementation(libs.kotlin.coroutines)
             implementation(libs.kermit)
             api(project(":webrtc-kmp"))
@@ -87,6 +86,7 @@ kotlin {
 
         androidMain.dependencies {
             implementation(libs.kotlin.coroutines.android)
+            implementation(libs.androidx.coreKtx)
             implementation(libs.accompanist.permissions)
         }
 
@@ -96,6 +96,7 @@ kotlin {
             implementation(libs.kotlin.wrappers.react)
             implementation(libs.kotlin.wrappers.reactDom)
             implementation(libs.kotlin.wrappers.emotion)
+            implementation(libs.kotlin.wrappers.emotion.styled)
         }
     }
 }

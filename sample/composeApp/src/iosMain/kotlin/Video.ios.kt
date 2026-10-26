@@ -1,7 +1,7 @@
 import WebRTC.RTCMTLVideoView
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.interop.UIKitView
+import androidx.compose.ui.viewinterop.UIKitView
 import com.shepeliev.webrtckmp.AudioTrack
 import com.shepeliev.webrtckmp.VideoTrack
 import kotlinx.cinterop.ExperimentalForeignApi

@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.shepeliev.webrtckmp.sample"
-        minSdk = libs.versions.minSdk.get().toInt()
+        minSdk = libs.versions.sampleMinSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
@@ -26,15 +26,15 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
 }
 
 dependencies {
     implementation(project(":sample:composeApp"))
     implementation(libs.androidx.activity.compose)
-    implementation(compose.runtime)
-    implementation(compose.preview)
-    debugImplementation(compose.uiTooling)
+    implementation(libs.compose.runtime)
+    implementation(libs.compose.ui.tooling.preview)
+    debugImplementation(libs.compose.ui.tooling)
 }
