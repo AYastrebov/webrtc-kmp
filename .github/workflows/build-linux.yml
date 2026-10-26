@@ -72,4 +72,4 @@ jobs:
           path: "webrtc-kmp/build/reports/tests/wasmJs*Test"
 
       - name: Build sample app
-        run: ./gradlew sample:composeApp:assemble
+        run: ./gradlew sample:androidApp:assemble sample:composeApp:jsBrowserDistribution sample:composeApp:wasmJsBrowserDistribution

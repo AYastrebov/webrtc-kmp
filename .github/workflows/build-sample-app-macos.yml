@@ -28,20 +28,17 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-konan- 
 
-      - name: Cocoapods cache
-        uses: actions/cache@v3
-        id: cocoapods-cache
+      - name: SwiftPM cache
+        uses: actions/cache@v4
         with:
           path: |
-            ~/.cocoapods
-            ~/Library/Caches/CocoaPods
-            */build/cocoapods
-            */build/classes
-          key: cocoapods-cache
+            ~/Library/Caches/org.swift.swiftpm
+            .swiftpm-locks/*/swiftPMCheckout
+          key: ${{ runner.os }}-swiftpm-${{ hashFiles('.swiftpm-locks/*/swiftImport/Package.resolved') }}
+          restore-keys: |
+            ${{ runner.os }}-swiftpm-
 
       - name: Build sample app
         run: |
-          ./gradlew :sample:composeApp:generateDummyFramework
           cd sample/iosApp
-          pod install --repo-update
-          xcodebuild -workspace iosApp.xcworkspace -configuration Debug -scheme iosApp -sdk iphonesimulator -arch arm64
+          xcodebuild -project iosApp.xcodeproj -configuration Debug -scheme iosApp -sdk iphonesimulator -arch arm64

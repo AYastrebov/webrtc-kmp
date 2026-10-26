@@ -28,16 +28,15 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-konan- 
 
-      - name: Cocoapods cache
-        uses: actions/cache@v3
-        id: cocoapods-cache
+      - name: SwiftPM cache
+        uses: actions/cache@v4
         with:
           path: |
-            ~/.cocoapods
-            ~/Library/Caches/CocoaPods
-            */build/cocoapods
-            */build/classes
-          key: cocoapods-cache
+            ~/Library/Caches/org.swift.swiftpm
+            .swiftpm-locks/*/swiftPMCheckout
+          key: ${{ runner.os }}-swiftpm-${{ hashFiles('.swiftpm-locks/*/swiftImport/Package.resolved') }}
+          restore-keys: |
+            ${{ runner.os }}-swiftpm-
 
       - name: Run iOS tests
         run: ./gradlew cleanTest webrtc-kmp:iosSimulatorArm64Test
@@ -47,4 +46,4 @@ jobs:
         if: failure()
         with:
           name: "iOS Tests Report HTML"
-          path: "webrtc-kmp/build/reports/tests/iosX64Test"
+          path: "webrtc-kmp/build/reports/tests/iosSimulatorArm64Test"
